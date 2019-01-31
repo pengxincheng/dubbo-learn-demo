@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 定义了提供方应用信息，用于计算依赖关系。在dubbo-admin 或 dubbo-monitor 会显示这个名字，方便识别 -->
+    <dubbo:application name="${dubbo.application.name}" owner="${dubbo.application.name}"/>
+
+    <!-- 使用zookeeper 注册中心暴露服务，注意要先开启 zookeeper -->
+    <dubbo:registry address="${dubbo.registry.address}" timeout="60000"/>
+
+    <!-- 用dubbo协议在20880端口暴露服务 -->
+    <dubbo:protocol name="dubbo" port="${dubbo.provider.port}"/>
+
+    <!-- check:启动检查，默认为 true  启动时，服务提供方不存在则启动失败，反之能成功启动-->
+    <!-- cluster:容错配置  failover 默认 可选：failfast,failsafe(不报错，返回null)，failback，forking，broadcast  具体说明查看 dubbo.io-->
+  <dubbo:reference id="userService"
+                   interface="com.pxc.dubbo.learn.api.user.UserService"
+                   check="false"
+                   cluster="failfast"
+                   cache="lru"
+  />
+
+
+
+</beans>
